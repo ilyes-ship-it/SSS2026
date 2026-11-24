@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    options {
+        skipDefaultCheckout()
+    }
+
+    stages {
+        stage('Clone repository') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build backend image') {
+            steps {
+                dir('somebankingapp-dockerfiles/backend') {
+                    sh 'docker build -t banking-backend:${BUILD_NUMBER} .'
+                }
+            }
+        }
+        stage('Build frontend image') {
+            steps {
+                dir('somebankingapp-dockerfiles/frontend') {
+                    sh 'docker build -t banking-frontend:${BUILD_NUMBER} .'
+                }
+            }
+        }
+    }
+}
